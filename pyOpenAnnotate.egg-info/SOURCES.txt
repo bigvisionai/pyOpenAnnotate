@@ -1,0 +1,7 @@
+README.md
+setup.py
+pyOpenAnnotate.egg-info/PKG-INFO
+pyOpenAnnotate.egg-info/SOURCES.txt
+pyOpenAnnotate.egg-info/dependency_links.txt
+pyOpenAnnotate.egg-info/requires.txt
+pyOpenAnnotate.egg-info/top_level.txt

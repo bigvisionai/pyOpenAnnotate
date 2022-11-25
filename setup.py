@@ -9,11 +9,11 @@ with codecs.open(os.path.join(here, "README.md"), encoding="utf-8") as fh:
 
 VERSION = '0.0.1'
 DESCRIPTION = 'Automated single class image annotation tool.'
-LONG_DESCRIPTION = 'An automated single class image annotation tool using OpenCV.'
+LONG_DESCRIPTION = 'An automated single class image annotation tool using OpenCV and Python.'
 
 # Setting up
 setup(
-    name="open-Annotate",
+    name="pyOpenAnnotate",
     version=VERSION,
     author="Kukil [LearnOpenCV]",
     author_email="<kukilp213@gmail.com>",

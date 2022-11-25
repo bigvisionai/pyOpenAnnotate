@@ -1,0 +1,22 @@
+Metadata-Version: 2.1
+Name: pyOpenAnnotate
+Version: 0.0.1
+Summary: Automated single class image annotation tool.
+Author: Kukil [LearnOpenCV]
+Author-email: <kukilp213@gmail.com>
+License: UNKNOWN
+Keywords: opencv,python,annotation tool,assisted annotation
+Platform: UNKNOWN
+Classifier: Development Status :: 1 - Planning
+Classifier: Intended Audience :: Developers
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: Unix
+Classifier: Operating System :: MacOS :: MacOS X
+Classifier: Operating System :: Microsoft :: Windows
+Description-Content-Type: text/markdown
+
+
+# pyOpenAnnotate
+A single class annotation tool. 
+
+
