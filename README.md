@@ -1,2 +1,3 @@
-# pyOpenAnnotate
-A single class annotation tool. 
+# Annotation-Tool
+
+Simple and intuitive automated annotation tool using OpenCV.
