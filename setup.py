@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
      name='pyOpenAnnotate',  
-     version='0.1',
+     version='0.2',
      scripts=['annotate'] ,
      author="Kukil Kashyap Borgohain",
      author_email="kukilp213@gmail.com",

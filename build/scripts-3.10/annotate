@@ -7,8 +7,7 @@ import argparse
 from natsort import natsorted
 import numpy as np 
 import annotations as annotations
-import tkinter as tk
-from tkinter.messagebox import showinfo
+
 
 #--------------------------------INITIALIZATIONS--------------------------------#
 coord = (20, 20)
@@ -244,7 +243,6 @@ def main(file_path, args, type='img'):
 
         img_path = os.path.join(file_path, updated_images_paths[num])
         img = cv2.imread(img_path)
-        # print(updated_images_paths[num])
 
         # Add all side padding 20 px.
         prev_thresh = 127
@@ -360,11 +358,10 @@ if __name__ == '__main__':
         VID_PATH = args.vid
         if not os.path.isfile(VID_PATH):
             print('Please enter correct path to the video file.')
-            showinfo(title='Information', message='Please enter correct path to the video file.')
             sys.exit()
         main(VID_PATH, args, type='vid')
-        print(f"Annotations Saved to {os.getcwd() + '/Annotations'}")
-        print(f"Images Saved to {os.getcwd() + '/Dataset'}")
+        print(f"Annotations Saved to {os.getcwd()}/Annotations")
+        print(f"Images Saved to {os.getcwd()}/Dataset")
     elif args.img:
         IMAGES_DIR = args.img
         if not os.path.isdir(IMAGES_DIR):

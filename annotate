@@ -360,8 +360,8 @@ if __name__ == '__main__':
             print('Please enter correct path to the video file.')
             sys.exit()
         main(VID_PATH, args, type='vid')
-        print(f"Annotations Saved to {os.getcwd() + '/Annotations'}")
-        print(f"Images Saved to {os.getcwd() + '/Dataset'}")
+        print(f"Annotations Saved to {os.getcwd()}/Annotations")
+        print(f"Images Saved to {os.getcwd()}/Dataset")
     elif args.img:
         IMAGES_DIR = args.img
         if not os.path.isdir(IMAGES_DIR):
