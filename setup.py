@@ -13,7 +13,7 @@ setuptools.setup(
      description="Automated single class annotation tool using OpenCV.",
      long_description=long_description,
    long_description_content_type="text/markdown",
-     url="https://github.com/kXborg/cv-test-pip",
+     url="https://github.com/kXborg/pyOpenAnnotate",
      packages=setuptools.find_packages(),
      py_modules = ['annotations'],
      install_requires=['opencv-python', 'natsort'],
