@@ -1,4 +1,11 @@
-import os 
+import os
+import cv2 
+import numpy as np
+
+
+def ignore(x):
+    pass
+
 
 def save(img_file, shape, boxes):
     """
@@ -114,6 +121,36 @@ def get_box_area(tlc, brc):
     x1, y1, x2, y2 = tlc[0], tlc[1], brc[0], brc[1]
     area = abs(x2 - x1) * abs(y2 - y1)
     return area
+
+
+def draw_dotted_lines(img, pt1, pt2, color, thickness=1, style='dotted', gap=10):
+    """
+    Draw dotted lines. 
+    Adopted from StackOverflow.
+    """
+    dist = ((pt1[0]-pt2[0])**2+(pt1[1]-pt2[1])**2)**0.5
+    pts= []
+    for i in  np.arange(0, dist, gap):
+        r = i/dist
+        x = int((pt1[0] * (1-r) + pt2[0] * r) + 0.5)
+        y = int((pt1[1] * (1-r) + pt2[1] * r) + 0.5)
+        p = (x,y)
+        pts.append(p)
+
+    if style == 'dotted':
+        for p in pts:
+            cv2.circle(img, p, thickness, color, -1)
+    else:
+        s = pts[0]
+        e = pts[0]
+        i = 0
+        for p in pts:
+            s = e
+            e = p
+            if i%2 == 1:
+                cv2.line(img, s, e, color, thickness)
+            i += 1
+
 
 if __name__ == '__main__':
     pass
