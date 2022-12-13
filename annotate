@@ -243,7 +243,6 @@ def main(file_path, args, type='img'):
 
         img_path = os.path.join(file_path, updated_images_paths[num])
         img = cv2.imread(img_path)
-        # print(updated_images_paths[num])
 
         # Add all side padding 20 px.
         prev_thresh = 127
