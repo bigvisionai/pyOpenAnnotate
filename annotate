@@ -315,7 +315,7 @@ def main(file_path, args, type='img'):
             # Store current threshold trackbar value to a temporary variable.
             thresh_val_prev = thresh_val
             # Press n to go to the next image.
-            if key == ord('n'):
+            if key == ord('n') or key == ord('d'):
                 clean_img = None
                 annotations.save(updated_images_paths[num].split('.')[0], (h, w), bboxes)
                 num += 1
@@ -323,7 +323,7 @@ def main(file_path, args, type='img'):
                 del_entries = []
                 break
                 
-            if key == ord('b'):
+            if key == ord('b') or key == ord('a'):
                 # print('Back Key Pressed.')
                 # Go back one step.
                 clean_img = None
