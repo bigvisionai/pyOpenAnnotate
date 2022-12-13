@@ -1,4 +1,7 @@
 README.md
+annotate
+annotations.py
+setup.cfg
 setup.py
 pyOpenAnnotate.egg-info/PKG-INFO
 pyOpenAnnotate.egg-info/SOURCES.txt

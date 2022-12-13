@@ -16,7 +16,7 @@ setuptools.setup(
      url="https://github.com/kXborg/cv-test-pip",
      packages=setuptools.find_packages(),
      py_modules = ['annotations'],
-     install_requires=['opencv-python', 'setuptools'],
+     install_requires=['opencv-python'],
      classifiers=[
          "Programming Language :: Python :: 3",
          "License :: OSI Approved :: MIT License",
