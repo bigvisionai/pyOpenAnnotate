@@ -350,18 +350,24 @@ def main(file_path, args, type='img'):
                         pass
                 
             if key == ord('q'):
-                quit()
+                sys.exit()
 
 
 if __name__ == '__main__':
     args = parser_opt()
     if args.vid:
         VID_PATH = args.vid
+        if not os.path.isfile(VID_PATH):
+            print('Please enter correct path to the video file.')
+            sys.exit()
         main(VID_PATH, args, type='vid')
         print(f"Annotations Saved to {os.getcwd() + '/Annotations'}")
         print(f"Images Saved to {os.getcwd() + '/Dataset'}")
     elif args.img:
         IMAGES_DIR = args.img
+        if not os.path.isdir(IMAGES_DIR):
+            print('Please enter correct images directory path.')
+            sys.exit()
         main(IMAGES_DIR, args, type='img')
         print(f"Annotations Saved to {os.getcwd() + '/Annotations'}")
     else:
