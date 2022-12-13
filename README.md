@@ -1,4 +1,4 @@
-# Automnated Annotation Tool
+# Automated Annotation Tool
 
 Single class image annotation tool using OpenCV.
 
