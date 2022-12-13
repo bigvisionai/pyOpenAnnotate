@@ -4,6 +4,7 @@ import cv2
 import os
 import sys
 import argparse
+from natsort import natsorted
 import numpy as np 
 import annotations as annotations
 
@@ -181,7 +182,7 @@ def image_paths(dir):
         if ('.jpg' in file) or ('.png' in file) or ('.jpeg' in file):
             updated_images_paths.append(file)
 
-    updated_images_paths = sorted(updated_images_paths)
+    updated_images_paths = natsorted(updated_images_paths)
 
     with open('names.txt', 'w') as f:
         for path in updated_images_paths:
@@ -250,7 +251,8 @@ def main(file_path, args, type='img'):
         
         while True:
             img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            img_gray_padded = cv2.copyMakeBorder(img_gray, PADDING, PADDING, PADDING, PADDING, cv2.BORDER_CONSTANT, None, value=255)
+            img_gray_padded = cv2.copyMakeBorder(img_gray, PADDING, PADDING, PADDING, PADDING, 
+            	cv2.BORDER_CONSTANT, None, value=255)
             im_annotate = img.copy()
 
             # Get trackbar threshold value.
