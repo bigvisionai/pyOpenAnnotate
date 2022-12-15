@@ -180,8 +180,6 @@ def main(file_path, args, type='img'):
 
     if type == 'img':
         updated_images_paths = image_paths(file_path)
-        print('Before', updated_images_paths)
-        print('_____________________________')
         if args.resume:
             completed_images = natsorted(os.listdir(args.resume))
             completed_images_names = []
@@ -194,8 +192,7 @@ def main(file_path, args, type='img'):
                 if not source_file.split('.')[0] in completed_images_names:
                     updated_im_paths.append(source_file)
 
-            updated_images_paths = updated_im_paths  
-            print('After : \n', updated_images_paths)        
+            updated_images_paths = updated_im_paths
 
     elif type == 'vid':
         if not os.path.exists('Dataset'):
