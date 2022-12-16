@@ -1,11 +1,12 @@
 # Automated Annotation Tool
 
-Single class automated image annotation tool using OpenCV.
+Single class automated image annotation tool. Check out accompanying blog post [Automated Annotation using OpenCV](https://learnopencv.com/automated-image-annotation-tool-using-opencv-python/).
+
+<img src="https://learnopencv.com/wp-content/uploads/2022/12/annotation-tool.gif" alt="Automated Annotation Tool OpenCV" width="900">
 
 ## Example Use Cases
 <img src="https://learnopencv.com/wp-content/uploads/2022/11/stags-and-boars-image-annotation-tool-opencv-contour-analysis.png" alt="Automated Annotation pyOpenAnnotate" width="900">
 
-<img src="https://learnopencv.com/wp-content/uploads/2022/11/image-annotation-tool-coins-and-boxes-on-conveyor-opencv-contour-analysis.png" alt="Automated Annotation pyOpenAnnotate" width="900">
 
 ## Annotate Images
 
@@ -20,6 +21,8 @@ annotate --vid <path_to_video_file>
 ## Global Flags
 ```
 -T : View mask window.
+--resume <existing-annotations-dir>: Continue from where you left off.
+--skip <int(Frames)> : Frames to skip while processing a video file.
 ```
 ## Keyboard Navigation
 ```

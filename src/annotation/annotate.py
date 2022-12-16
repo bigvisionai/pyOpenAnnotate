@@ -47,6 +47,13 @@ def parser_opt():
         '--resume',
         help='path to annotations directory'
     )
+    parser.add_argument(
+        '--skip',
+        type=int,
+        default=3,
+        help="Number of frames to skip."
+
+    )
     if len(sys.argv) == 1:
         parser.print_help()
         sys.exit()
@@ -190,7 +197,7 @@ def main():
     if file_type == 'img':
         file_path = IMAGES_DIR
         updated_images_paths = image_paths(file_path)
-        if args.resume:
+        if args.resume is not None:
             completed_images = natsorted(os.listdir(args.resume))
             completed_images_names = []
 
@@ -210,23 +217,26 @@ def main():
             # Delete existing images. Feature to be added.
             os.mkdir('Dataset')
         loading_img = np.zeros([400, 640, 3], dtype=np.uint8)
+        skip_count = args.skip
         cap = cv2.VideoCapture(file_path)
         frame_count = cap.get(cv2.CAP_PROP_FRAME_COUNT)
 
         i = 0
+        count = 0
         while cap.isOpened():
-            ret, frame = cap.read()
-            
-            load = loading_img.copy()
-            if not ret:
-                print('Unable to read frame')
-                break
-            cv2.putText(load, f"Frames: {i} / {int(frame_count)}", 
-                (10, 30), cv2.FONT_HERSHEY_COMPLEX, 0.7, (0,0,255), 1, cv2.LINE_AA)
-            cv2.putText(load, f"Sequencing...", 
-                (260, 200), cv2.FONT_HERSHEY_COMPLEX, 0.7, (0,0,255), 1, cv2.LINE_AA)
-            cv2.imshow('Images', load)
-            cv2.imwrite('Dataset/img-{}.jpg'.format(i), frame)
+            if count/skip_count == 0:
+                ret, frame = cap.read()
+                
+                load = loading_img.copy()
+                if not ret:
+                    print('Unable to read frame')
+                    break
+                cv2.putText(load, f"Frames: {i} / {int(frame_count)}", 
+                    (10, 30), cv2.FONT_HERSHEY_COMPLEX, 0.7, (0,0,255), 1, cv2.LINE_AA)
+                cv2.putText(load, f"Sequencing...", 
+                    (260, 200), cv2.FONT_HERSHEY_COMPLEX, 0.7, (0,0,255), 1, cv2.LINE_AA)
+                cv2.imshow('Images', load)
+                cv2.imwrite('Dataset/img-{}.jpg'.format(i), frame)
             key = cv2.waitKey(1)
             i += 1
             if key == ord('q'):
@@ -252,15 +262,14 @@ def main():
         img = cv2.imread(img_path)
         original_height = img.shape[0]
         original_width = img.shape[1]
+
         resized_image = utils.aspect_resize(img)
-        print('Image Res: ', resized_image.shape)
         current_height = resized_image.shape[0]
         current_width = resized_image.shape[1]
-        print(f"Current Height : {current_height} , Width: {current_width}")
+
         aspect_h = original_height/ current_height
         aspect_w = original_width/current_width
         aspect_ratio = [aspect_h, aspect_w]
-        print(f"Aspect Ratio: {aspect_ratio}")
 
 
         # Add all side padding 20 px.
@@ -341,7 +350,6 @@ def main():
                 bboxes = []
                 del_entries = []
                 # print(f"Annotations Saved to {os.getcwd()}/Annotations")
-                aspect_ratio = []
                 break
                 
             if key == ord('b') or key == ord('a'):
@@ -354,7 +362,6 @@ def main():
                 # print(f"Annotations Saved to {os.getcwd()}/Annotations")
                 bboxes = []
                 del_entries = []
-                aspect_ratio = []
                 break
 
             if key == ord('c'):
@@ -362,7 +369,6 @@ def main():
                 utils.save(updated_images_paths[num].split('.')[0], (h, w), bboxes, aspect_ratio)
                 bboxes = []
                 del_entries = []
-                aspect_ratio = []
             
             if key == ord('t'):
                 Toggle = not Toggle

@@ -1,9 +1,9 @@
 # import cv2 
-# img = cv2.imread('Dataset/2.jpg')
+# img = cv2.imread('Dataset/5.jpg')
 
 # height, width = img.shape[:2]
 # print(height, width)
-# with open('Annotations/2.txt', 'r') as f:
+# with open('Annotations/5.txt', 'r') as f:
 #     lines = f.readlines()
 #     for line in lines:
 #         name = line.replace('\n', '')

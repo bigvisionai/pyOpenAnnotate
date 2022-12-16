@@ -14,8 +14,8 @@ def save(img_file, shape, boxes, aspect_ratio):
     """
     height_f = aspect_ratio[0]
     width_f = aspect_ratio[1]
-    img_height = shape[0]
-    img_width = shape[1]
+    img_height = int(shape[0]*height_f)
+    img_width = int(shape[1]*width_f)
     # print('Check : ', height_f, 'Width : ', width_f)
 
     # Check if the Annotations folder is empty.
@@ -89,7 +89,7 @@ def draw_dotted_lines(img, pt1, pt2, color, thickness=1, style='dotted', gap=10)
 
 def aspect_resize(img):
     prev_h, prev_w = img.shape[:2]
-    print(prev_h, prev_w)
+    # print(prev_h, prev_w)
 
     if prev_w > prev_h:
         current_w = 960
