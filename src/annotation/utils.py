@@ -24,15 +24,19 @@ def save(img_file, shape, boxes):
         for box in boxes:
             x1, y1 = box[0][0], box[0][1]
             x2, y2 = box[1][0], box[1][1]
+            if x1 > x2:
+                x1, x2 = x2, x1
+            if y1 > y2:
+                y1, y2 = y2, y1
             width = abs(x2 - x1)
             height = abs(y2 - y1)
-            x_centre = int(width/2)
-            y_centre = int(height/2)
+            x_centre = int(x1 + width/2)
+            y_centre = int(y1 + height/2)
 
-            norm_xc = x_centre/img_width
-            norm_yc = y_centre/img_height
-            norm_width = width/img_width
-            norm_height = height/img_height
+            norm_xc = float(x_centre/img_width)
+            norm_yc = float(y_centre/img_height)
+            norm_width = float(width/img_width)
+            norm_height = float(height/img_height)
 
             yolo_annotations = ['0', ' ' + str(norm_xc), ' ' + str(norm_yc), ' ' + str(norm_width), ' ' + str(norm_height), '\n']
             f.writelines(yolo_annotations)

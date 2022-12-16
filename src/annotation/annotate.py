@@ -335,19 +335,19 @@ def main():
                 # print('Back Key Pressed.')
                 # Go back one step.
                 clean_img = None
-                bboxes = []
-                del_entries = []
                 utils.save(updated_images_paths[num].split('.')[0], (h, w), bboxes)
                 if num != 0:
                     num -= 1
                 # print(f"Annotations Saved to {os.getcwd()}/Annotations")
+                bboxes = []
+                del_entries = []
                 break
 
             if key == ord('c'):
                 reset = not reset
+                utils.save(updated_images_paths[num].split('.')[0], (h, w), bboxes)
                 bboxes = []
                 del_entries = []
-                utils.save(updated_images_paths[num].split('.')[0], (h, w), bboxes)
             
             if key == ord('t'):
                 Toggle = not Toggle
