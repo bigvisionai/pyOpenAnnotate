@@ -1,6 +1,6 @@
 # Automated Annotation Tool
 
-Single class image annotation tool using OpenCV.
+Single class automated image annotation tool using OpenCV.
 
 ## Example Use Cases
 <img src="https://learnopencv.com/wp-content/uploads/2022/11/stags-and-boars-image-annotation-tool-opencv-contour-analysis.png" alt="Automated Annotation pyOpenAnnotate" width="900">
