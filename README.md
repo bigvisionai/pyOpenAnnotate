@@ -24,6 +24,12 @@ annotate --vid <path_to_video_file>
 --resume <existing-annotations-dir>: Continue from where you left off.
 --skip <int(Frames)> : Frames to skip while processing a video file.
 ```
+
+# Mouse Controls
+```
+Click and Drag: Draw bounding boxes.
+Double Click: Remove existing annotation.
+```
 ## Keyboard Navigation
 ```
 N : Save and go to next image
