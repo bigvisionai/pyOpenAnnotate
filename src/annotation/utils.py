@@ -7,13 +7,16 @@ def ignore(x):
     pass
 
 
-def save(img_file, shape, boxes):
+def save(img_file, shape, boxes, aspect_ratio):
     """
     Saves annotations to a text file in YOLO format,
     class, x_centre, y_centre, width, height
     """
+    height_f = aspect_ratio[0]
+    width_f = aspect_ratio[1]
     img_height = shape[0]
     img_width = shape[1]
+    # print('Check : ', height_f, 'Width : ', width_f)
 
     # Check if the Annotations folder is empty.
 
@@ -24,6 +27,12 @@ def save(img_file, shape, boxes):
         for box in boxes:
             x1, y1 = box[0][0], box[0][1]
             x2, y2 = box[1][0], box[1][1]
+            # Map to the original image size.
+            x1 = int(width_f*x1)
+            y1 = int(height_f*y1)
+            x2 = int(width_f*x2)
+            y2 = int(height_f*y2)
+
             if x1 > x2:
                 x1, x2 = x2, x1
             if y1 > y2:
@@ -76,3 +85,25 @@ def draw_dotted_lines(img, pt1, pt2, color, thickness=1, style='dotted', gap=10)
             if i%2 == 1:
                 cv2.line(img, s, e, color, thickness)
             i += 1
+
+
+def aspect_resize(img):
+    prev_h, prev_w = img.shape[:2]
+    print(prev_h, prev_w)
+
+    if prev_w > prev_h:
+        current_w = 960
+        aspect_ratio = current_w/prev_w
+        current_h = int(aspect_ratio*prev_h)
+
+    elif prev_w < prev_h:
+        current_h = 720
+        aspect_ratio = current_h/prev_h
+        current_w = int(aspect_ratio*prev_h)
+
+    else:
+        if prev_h != 720:
+            current_h, current_w = 720, 720
+
+    res = cv2.resize(img, (current_w, current_h))
+    return res

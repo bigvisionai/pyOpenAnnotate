@@ -172,14 +172,14 @@ def main():
     args = parser_opt()
 
     if args.vid is not None:
-        type = 'vid'
+        file_type = 'vid'
         VID_PATH = args.vid
         if not os.path.isfile(VID_PATH):
             print('Please enter correct path to the video file.')
             sys.exit()
         
     elif args.img is not None:
-        type = 'img'
+        file_type = 'img'
         IMAGES_DIR = args.img
         if not os.path.isdir(IMAGES_DIR):
             print('Please enter correct images directory path.')
@@ -187,7 +187,7 @@ def main():
     else:
         print('Please provide the path to the image folder or video file.')
 
-    if type == 'img':
+    if file_type == 'img':
         file_path = IMAGES_DIR
         updated_images_paths = image_paths(file_path)
         if args.resume:
@@ -204,7 +204,7 @@ def main():
 
             updated_images_paths = updated_im_paths
 
-    elif type == 'vid':
+    elif file_type == 'vid':
         file_path = VID_PATH
         if not os.path.exists('Dataset'):
             # Delete existing images. Feature to be added.
@@ -241,7 +241,7 @@ def main():
     # Named window for Trackbars.
     cv2.namedWindow('Annotate')
     cv2.createTrackbar('threshold', 'Annotate', 127, 255, utils.ignore)
-    cv2.createTrackbar('minArea', 'Annotate', 1, 500, utils.ignore)
+    cv2.createTrackbar('minArea', 'Annotate', 5, 500, utils.ignore)
     num = 0
     while True:
         if num == len(updated_images_paths):
@@ -250,16 +250,28 @@ def main():
 
         img_path = os.path.join(file_path, updated_images_paths[num])
         img = cv2.imread(img_path)
+        original_height = img.shape[0]
+        original_width = img.shape[1]
+        resized_image = utils.aspect_resize(img)
+        print('Image Res: ', resized_image.shape)
+        current_height = resized_image.shape[0]
+        current_width = resized_image.shape[1]
+        print(f"Current Height : {current_height} , Width: {current_width}")
+        aspect_h = original_height/ current_height
+        aspect_w = original_width/current_width
+        aspect_ratio = [aspect_h, aspect_w]
+        print(f"Aspect Ratio: {aspect_ratio}")
+
 
         # Add all side padding 20 px.
         prev_thresh = 127
         prev_min_area = 0.00
         
         while True:
-            img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            img_gray = cv2.cvtColor(resized_image, cv2.COLOR_BGR2GRAY)
             img_gray_padded = cv2.copyMakeBorder(img_gray, PADDING, PADDING, PADDING, PADDING, 
             	cv2.BORDER_CONSTANT, None, value=255)
-            im_annotate = img.copy()
+            im_annotate = resized_image.copy()
 
             # Get trackbar threshold value.
             thresh_val = cv2.getTrackbarPos('threshold', 'Annotate')
@@ -324,30 +336,33 @@ def main():
             # Press n to go to the next image.
             if key == ord('n') or key == ord('d'):
                 clean_img = None
-                utils.save(updated_images_paths[num].split('.')[0], (h, w), bboxes)
+                utils.save(updated_images_paths[num].split('.')[0], (h, w), bboxes, aspect_ratio)
                 num += 1
                 bboxes = []
                 del_entries = []
                 # print(f"Annotations Saved to {os.getcwd()}/Annotations")
+                aspect_ratio = []
                 break
                 
             if key == ord('b') or key == ord('a'):
                 # print('Back Key Pressed.')
                 # Go back one step.
                 clean_img = None
-                utils.save(updated_images_paths[num].split('.')[0], (h, w), bboxes)
+                utils.save(updated_images_paths[num].split('.')[0], (h, w), bboxes, aspect_ratio)
                 if num != 0:
                     num -= 1
                 # print(f"Annotations Saved to {os.getcwd()}/Annotations")
                 bboxes = []
                 del_entries = []
+                aspect_ratio = []
                 break
 
             if key == ord('c'):
                 reset = not reset
-                utils.save(updated_images_paths[num].split('.')[0], (h, w), bboxes)
+                utils.save(updated_images_paths[num].split('.')[0], (h, w), bboxes, aspect_ratio)
                 bboxes = []
                 del_entries = []
+                aspect_ratio = []
             
             if key == ord('t'):
                 Toggle = not Toggle
