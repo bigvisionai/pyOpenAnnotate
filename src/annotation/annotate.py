@@ -1,12 +1,12 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import os
 import cv2
 import sys
 import argparse
 import numpy as np
+from annotation import utils
 from natsort import natsorted
-from utils import ignore, save, get_box_area, draw_dotted_lines
 
 
 #--------------------------------INITIALIZATIONS--------------------------------#
@@ -129,7 +129,7 @@ def get_coordinate(event, x, y, flags, params):
             cv2.rectangle(clean_img, tlc, coord, (255,0,0), 2, cv2.LINE_AA)
         # Append the final bbox coordinates to a global list.
         # Also remove very very small annotations.
-        area = get_box_area(tlc, coord)
+        area = utils.get_box_area(tlc, coord)
         if area > 0.01 * max_area:
             bboxes.append((tlc, coord))
 
@@ -164,21 +164,31 @@ def get_coordinate(event, x, y, flags, params):
         remove_box = False
 
 
-def check_resume(prev_list, curr_list):
-    prev_names = []
-    curr_names = []
-    for file_name in prev_list:
-        prev_names.append(file_name.split('.')[0])
-    for file_name in curr_list:
-        curr_names.append(file_name.split('.')[0])
-
-
 # Load images.
-def main(file_path, args, type='img'):
+def main():
     global coord, tlc, draw_box, clean_img, org_img, min_area_ratio
     global remove_box,   bboxes, del_entries, reset, Toggle
+    
+    args = parser_opt()
+
+    if args.vid is not None:
+        type = 'vid'
+        VID_PATH = args.vid
+        if not os.path.isfile(VID_PATH):
+            print('Please enter correct path to the video file.')
+            sys.exit()
+        
+    elif args.img is not None:
+        type = 'img'
+        IMAGES_DIR = args.img
+        if not os.path.isdir(IMAGES_DIR):
+            print('Please enter correct images directory path.')
+            sys.exit()
+    else:
+        print('Please provide the path to the image folder or video file.')
 
     if type == 'img':
+        file_path = IMAGES_DIR
         updated_images_paths = image_paths(file_path)
         if args.resume:
             completed_images = natsorted(os.listdir(args.resume))
@@ -195,7 +205,9 @@ def main(file_path, args, type='img'):
             updated_images_paths = updated_im_paths
 
     elif type == 'vid':
+        file_path = VID_PATH
         if not os.path.exists('Dataset'):
+            # Delete existing images. Feature to be added.
             os.mkdir('Dataset')
         loading_img = np.zeros([400, 640, 3], dtype=np.uint8)
         cap = cv2.VideoCapture(file_path)
@@ -224,11 +236,12 @@ def main(file_path, args, type='img'):
         cv2.destroyWindow('Images')
         updated_images_paths = image_paths('./Dataset')
         file_path = './Dataset'
+        print(f"Images Saved to {os.getcwd()}/Dataset")
 
     # Named window for Trackbars.
     cv2.namedWindow('Annotate')
-    cv2.createTrackbar('threshold', 'Annotate', 127, 255, ignore)
-    cv2.createTrackbar('minArea', 'Annotate', 1, 500, ignore)
+    cv2.createTrackbar('threshold', 'Annotate', 127, 255, utils.ignore)
+    cv2.createTrackbar('minArea', 'Annotate', 1, 500, utils.ignore)
     num = 0
     while True:
         if num == len(updated_images_paths):
@@ -291,15 +304,15 @@ def main(file_path, args, type='img'):
             vertical_pt1 = (coord[0], 0)
             vertical_pt2 = (coord[0], h)
 
-            draw_dotted_lines(im_annotate, horizontal_pt1, horizontal_pt2, (0,0,200))
-            draw_dotted_lines(im_annotate, vertical_pt1, vertical_pt2, (0,0,200))
+            utils.draw_dotted_lines(im_annotate, horizontal_pt1, horizontal_pt2, (0,0,200))
+            utils.draw_dotted_lines(im_annotate, vertical_pt1, vertical_pt2, (0,0,200))
 
             if draw_box:
                 cv2.rectangle(im_annotate, tlc, coord, (255,0,0), 2, cv2.LINE_AA)
 
             if reset:
                 im_annotate = org_img
-            
+      
             if args.toggle or Toggle:
                 cv2.imshow('Mask', thresh)
             cv2.imshow('Annotate', im_annotate)
@@ -311,10 +324,11 @@ def main(file_path, args, type='img'):
             # Press n to go to the next image.
             if key == ord('n') or key == ord('d'):
                 clean_img = None
-                save(updated_images_paths[num].split('.')[0], (h, w), bboxes)
+                utils.save(updated_images_paths[num].split('.')[0], (h, w), bboxes)
                 num += 1
                 bboxes = []
                 del_entries = []
+                # print(f"Annotations Saved to {os.getcwd()}/Annotations")
                 break
                 
             if key == ord('b') or key == ord('a'):
@@ -323,16 +337,17 @@ def main(file_path, args, type='img'):
                 clean_img = None
                 bboxes = []
                 del_entries = []
-                save(updated_images_paths[num].split('.')[0], (h, w), bboxes)
+                utils.save(updated_images_paths[num].split('.')[0], (h, w), bboxes)
                 if num != 0:
                     num -= 1
+                # print(f"Annotations Saved to {os.getcwd()}/Annotations")
                 break
 
             if key == ord('c'):
                 reset = not reset
                 bboxes = []
                 del_entries = []
-                save(updated_images_paths[num].split('.')[0], (h, w), bboxes)
+                utils.save(updated_images_paths[num].split('.')[0], (h, w), bboxes)
             
             if key == ord('t'):
                 Toggle = not Toggle
@@ -343,25 +358,10 @@ def main(file_path, args, type='img'):
                         pass
                 
             if key == ord('q'):
+                print(f"Annotations Saved to {os.getcwd()}/Annotations")
                 sys.exit()
-
+    print(f"Annotations Saved to {os.getcwd()}/Annotations")
 
 if __name__ == '__main__':
-    args = parser_opt()
-    if args.vid:
-        VID_PATH = args.vid
-        if not os.path.isfile(VID_PATH):
-            print('Please enter correct path to the video file.')
-            sys.exit()
-        main(VID_PATH, args, type='vid')
-        print(f"Annotations Saved to {os.getcwd()}/Annotations")
-        print(f"Images Saved to {os.getcwd()}/Dataset")
-    elif args.img:
-        IMAGES_DIR = args.img
-        if not os.path.isdir(IMAGES_DIR):
-            print('Please enter correct images directory path.')
-            sys.exit()
-        main(IMAGES_DIR, args, type='img')
-        print(f"Annotations Saved to {os.getcwd() + '/Annotations'}")
-    else:
-        print('Please provide the path to the image folder or video file.')
+    main()
+    
