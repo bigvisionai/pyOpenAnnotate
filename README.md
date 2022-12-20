@@ -1,4 +1,4 @@
-# Automated Annotation Tool
+# pyOpenAnnotate: Automating Annotation
 
 Single class automated image annotation tool. Check out accompanying blog post [Automated Annotation using OpenCV](https://learnopencv.com/automated-image-annotation-tool-using-opencv-python/).
 
