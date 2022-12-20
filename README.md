@@ -25,15 +25,15 @@ annotate --vid <path_to_video_file>
 --skip <int(Frames)> : Frames to skip while processing a video file.
 ```
 
-# Mouse Controls
+## Mouse Controls
 ```
 Click and Drag: Draw bounding boxes.
 Double Click: Remove existing annotation.
 ```
 ## Keyboard Navigation
 ```
-N : Save and go to next image
-B : Save and go back
+N or D : Save and go to next image
+B or A : Save and go back
 C : Toggle clear screen 
 T : Toggle mask window
 Q : Quit
