@@ -20,10 +20,10 @@ def save(img_file, shape, boxes, aspect_ratio):
 
     # Check if the Annotations folder is empty.
 
-    if not os.path.exists('Annotations'):
-        os.mkdir('Annotations')
+    if not os.path.exists('labels'):
+        os.mkdir('labels')
         
-    with open('Annotations/' + img_file + '.txt', 'w') as f:
+    with open('labels/' + img_file + '.txt', 'w') as f:
         for box in boxes:
             x1, y1 = box[0][0], box[0][1]
             x2, y2 = box[1][0], box[1][1]
