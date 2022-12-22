@@ -1,8 +1,11 @@
 # Automated Annotation Tool
 
-Automate your image annotation pipeline using pyOpenAnnotate. Built harnessing the power of simple tools in OpenCV. Perfect for annotating single class datasets. Check out accompanying blog post to understand how pyOpenAnnotate has been designed. 
+Automate your image annotation pipeline using <b>pyOpenAnnotate</b>. It is built harnessing the power of OpenCV. Perfect for annotating single class datasets. Check out accompanying blog post to understand how <b>pyOpenAnnotate</b> has been designed. 
 
-[Automated Annotation using OpenCV](https://learnopencv.com/automated-image-annotation-tool-using-opencv-python/).
+[Automated Image Annotation Tool Using OpenCV](https://learnopencv.com/automated-image-annotation-tool-using-opencv-python/).
+
+<br>
+<br>
 
 <img src="https://learnopencv.com/wp-content/uploads/2022/12/annotation-tool.gif" alt="Automated Annotation Tool OpenCV" width="900">
 
@@ -12,7 +15,7 @@ Automate your image annotation pipeline using pyOpenAnnotate. Built harnessing t
 <img src="https://learnopencv.com/wp-content/uploads/2022/11/image-annotation-tool-strawberries-and-fishes-opencv-contour-analysis.png" alt="Automated Annotation pyOpenAnnotate" width="900">
 
 ## How To Use pyOpenAnnotate?
-Annotating using pyOpenAnnotate is pretty simple. Use the command 'annotate` followed by the following flags as per the requirement.
+Annotating images using pyOpenAnnotate is pretty simple. Use the command `annotate` followed by the following flags as per the requirement.
 ### 1. Annotate Images
 
 ```
