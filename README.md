@@ -1,4 +1,4 @@
-# pyOpenAnnotate: Automating Annotation
+# Automated Annotation Tool
 
 Single class automated image annotation tool. Check out accompanying blog post [Automated Annotation using OpenCV](https://learnopencv.com/automated-image-annotation-tool-using-opencv-python/).
 
@@ -7,35 +7,30 @@ Single class automated image annotation tool. Check out accompanying blog post [
 ## Example Use Cases
 <img src="https://learnopencv.com/wp-content/uploads/2022/11/stags-and-boars-image-annotation-tool-opencv-contour-analysis.png" alt="Automated Annotation pyOpenAnnotate" width="900">
 
-## Install 
-```
-pip install pyOpenAnnotate
-```
-## Commands
 
-### Annotate Images
+## Annotate Images
 
 ```
 annotate --img <images_directory_path>
 ```
 
-### Annotate Video
+## Annotate Video
 ```
 annotate --vid <path_to_video_file>
 ```
-### Global Flags
+## Global Flags
 ```
 -T : View mask window.
 --resume <existing-annotations-dir>: Continue from where you left off.
 --skip <int(Frames)> : Frames to skip while processing a video file.
 ```
 
-### Mouse Controls
+## Mouse Controls
 ```
 Click and Drag: Draw bounding boxes.
 Double Click: Remove existing annotation.
 ```
-### Keyboard Navigation
+## Keyboard Navigation
 ```
 N or D : Save and go to next image
 B or A : Save and go back
