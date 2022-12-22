@@ -45,14 +45,13 @@ def parser_opt():
     )
     parser.add_argument(
         '--resume',
-        help='path to annotations directory'
+        help='path to annotations/labels directory'
     )
     parser.add_argument(
         '--skip',
         type=int,
         default=3,
         help="Number of frames to skip."
-
     )
     if len(sys.argv) == 1:
         parser.print_help()
@@ -213,9 +212,9 @@ def main():
 
     elif file_type == 'vid':
         file_path = VID_PATH
-        if not os.path.exists('Dataset'):
+        if not os.path.exists('images'):
             # Delete existing images. Feature to be added.
-            os.mkdir('Dataset')
+            os.mkdir('images')
         loading_img = np.zeros([400, 640, 3], dtype=np.uint8)
         skip_count = args.skip
         cap = cv2.VideoCapture(file_path)
@@ -236,7 +235,7 @@ def main():
                 cv2.putText(load, f"Sequencing...", 
                     (260, 200), cv2.FONT_HERSHEY_COMPLEX, 0.7, (0,0,255), 1, cv2.LINE_AA)
                 cv2.imshow('Images', load)
-                cv2.imwrite('Dataset/img-{}.jpg'.format(i), frame)
+                cv2.imwrite('images/img-{}.jpg'.format(i), frame)
             key = cv2.waitKey(1)
             i += 1
             if key == ord('q'):
@@ -244,9 +243,9 @@ def main():
 
         cap.release()
         cv2.destroyWindow('Images')
-        updated_images_paths = image_paths('./Dataset')
-        file_path = './Dataset'
-        print(f"Images Saved to {os.getcwd()}/Dataset")
+        updated_images_paths = image_paths('./images')
+        file_path = './images'
+        print(f"Images Saved to {os.getcwd()}/images")
 
     # Named window for Trackbars.
     cv2.namedWindow('Annotate')
@@ -349,7 +348,7 @@ def main():
                 num += 1
                 bboxes = []
                 del_entries = []
-                # print(f"Annotations Saved to {os.getcwd()}/Annotations")
+                # print(f"Annotations Saved to {os.getcwd()}/labels")
                 break
                 
             if key == ord('b') or key == ord('a'):
@@ -359,7 +358,7 @@ def main():
                 utils.save(updated_images_paths[num].split('.')[0], (h, w), bboxes, aspect_ratio)
                 if num != 0:
                     num -= 1
-                # print(f"Annotations Saved to {os.getcwd()}/Annotations")
+                # print(f"Annotations Saved to {os.getcwd()}/labels")
                 bboxes = []
                 del_entries = []
                 break
@@ -379,9 +378,9 @@ def main():
                         pass
                 
             if key == ord('q'):
-                print(f"Annotations Saved to {os.getcwd()}/Annotations")
+                print(f"Annotations Saved to {os.getcwd()}/labels")
                 sys.exit()
-    print(f"Annotations Saved to {os.getcwd()}/Annotations")
+    print(f"Annotations Saved to {os.getcwd()}/labels")
 
 if __name__ == '__main__':
     main()
