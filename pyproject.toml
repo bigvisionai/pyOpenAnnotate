@@ -47,3 +47,4 @@ Homepage = "https://github.com/bigvisionai/pyOpenAnnotate"
 
 [project.scripts]
 annotate = "annotation.annotate:main"
+showlbls = "tools.visualize:main"
