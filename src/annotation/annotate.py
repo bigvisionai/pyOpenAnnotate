@@ -195,7 +195,7 @@ def update_bboxes(bboxes, del_entries, manual):
 # Load images.
 def main():
     global coord, tlc, draw_box, clean_img, org_img, min_area_ratio
-    global remove_box,   bboxes, del_entries, reset, Toggle, manual_assert_boxes
+    global remove_box, bboxes, del_entries, reset, Toggle, manual_assert_boxes
     
     args = parser_opt()
 
