@@ -25,7 +25,7 @@ reset = False
 PADDING = 10
 Toggle  = False
 min_area_ratio = 0.000
-temp_bboxes = []
+manual_assert_boxes = []
 #-------------------------------------------------------------------------------#
 
 
@@ -138,8 +138,9 @@ def get_coordinate(event, x, y, flags, params):
         # Append the final bbox coordinates to a global list.
         # Also remove very very small annotations.
         area = utils.get_box_area(tlc, coord)
-        if area > 0.01 * max_area:
+        if area > 0.0001 * max_area:
             bboxes.append((tlc, coord))
+            manual_assert_boxes.append((tlc, coord))
 
     # Add logic to remove a particular bounding box of double clicked in that area.
     if event == cv2.EVENT_LBUTTONDBLCLK:
@@ -172,22 +173,29 @@ def get_coordinate(event, x, y, flags, params):
         remove_box = False
 
 
-def update_bboxes(bboxes, del_entries):
+def update_bboxes(bboxes, del_entries, manual):
     for deleted_box in del_entries:
+        # Deleted box coordinates. Area increased by 10%.
         x1_del, y1_del = int(0.9*deleted_box[0][1]), int(0.9*deleted_box[0][1])
         x2_del, y2_del = int(1.1*deleted_box[1][0]), int(1.1*deleted_box[1][1])
         for box in bboxes:
             x1, y1 = box[0][0], box[0][1]
             x2, y2 = box[1][0], box[1][1]
+            # Check if the points are inside the deleted region.
             if (x1_del< x1 < x2_del) and (x1_del < x2 < x2_del) and (y1_del < y1 < y2_del) and (y1_del < y2 < y2_del):
                 bboxes.remove(box)
+        # Add manually drawn boxes as well, given that it is not from the deleted list.
+        if len(manual) > 0:
+            for manual_box in manual:
+                if (manual_box not in bboxes) and (manual_box not in del_entries):
+                    bboxes.append(manual_box)
     return bboxes
 
 
 # Load images.
 def main():
     global coord, tlc, draw_box, clean_img, org_img, min_area_ratio
-    global remove_box,   bboxes, del_entries, reset, Toggle
+    global remove_box,   bboxes, del_entries, reset, Toggle, manual_assert_boxes
     
     args = parser_opt()
 
@@ -310,17 +318,17 @@ def main():
             if clean_img is None:
                 # Find contours and draw bounding rects.
                 bboxes = get_init_bboxes(thresh)
-                bboxes = update_bboxes(bboxes, del_entries)
+                bboxes = update_bboxes(bboxes, del_entries, manual_assert_boxes)
 
             # If threshold slider is moved, update bounding rects.
             elif (clean_img is not None) and (prev_thresh != thresh_val):
                 reset = False
                 bboxes = get_init_bboxes(thresh)
-                bboxes = update_bboxes(bboxes, del_entries)
+                bboxes = update_bboxes(bboxes, del_entries, manual_assert_boxes)
                 # print('Check : ', del_entries)
             elif (clean_img is not None) and prev_min_area != min_area_ratio:
                 bboxes = get_init_bboxes(thresh)
-                bboxes = update_bboxes(bboxes, del_entries)
+                bboxes = update_bboxes(bboxes, del_entries, manual_assert_boxes)
 
             else:
                 # Update the thresh image if annotation performed once.
@@ -364,6 +372,7 @@ def main():
                 num += 1
                 bboxes = []
                 del_entries = []
+                manual_assert_boxes = []
                 # print(f"Annotations Saved to {os.getcwd()}/labels")
                 break
                 
@@ -377,6 +386,7 @@ def main():
                 # print(f"Annotations Saved to {os.getcwd()}/labels")
                 bboxes = []
                 del_entries = []
+                manual_assert_boxes = []
                 break
 
             if key == ord('c'):
@@ -384,6 +394,7 @@ def main():
                 utils.save(updated_images_paths[num].split('.')[0], (h, w), bboxes, aspect_ratio)
                 bboxes = []
                 del_entries = []
+                manual_assert_boxes = []
             
             if key == ord('t'):
                 Toggle = not Toggle
