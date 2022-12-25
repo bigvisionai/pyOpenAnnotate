@@ -6,6 +6,7 @@ import sys
 import argparse
 import numpy as np
 from annotation import utils
+from tools import visualize
 from natsort import natsorted
 
 
@@ -24,6 +25,7 @@ reset = False
 PADDING = 10
 Toggle  = False
 min_area_ratio = 0.000
+temp_bboxes = []
 #-------------------------------------------------------------------------------#
 
 
@@ -170,6 +172,18 @@ def get_coordinate(event, x, y, flags, params):
         remove_box = False
 
 
+def update_bboxes(bboxes, del_entries):
+    for deleted_box in del_entries:
+        x1_del, y1_del = int(0.9*deleted_box[0][1]), int(0.9*deleted_box[0][1])
+        x2_del, y2_del = int(1.1*deleted_box[1][0]), int(1.1*deleted_box[1][1])
+        for box in bboxes:
+            x1, y1 = box[0][0], box[0][1]
+            x2, y2 = box[1][0], box[1][1]
+            if (x1_del< x1 < x2_del) and (x1_del < x2 < x2_del) and (y1_del < y1 < y2_del) and (y1_del < y2 < y2_del):
+                bboxes.remove(box)
+    return bboxes
+
+
 # Load images.
 def main():
     global coord, tlc, draw_box, clean_img, org_img, min_area_ratio
@@ -270,7 +284,6 @@ def main():
         aspect_w = original_width/current_width
         aspect_ratio = [aspect_h, aspect_w]
 
-
         # Add all side padding 20 px.
         prev_thresh = 127
         prev_min_area = 0.00
@@ -297,14 +310,17 @@ def main():
             if clean_img is None:
                 # Find contours and draw bounding rects.
                 bboxes = get_init_bboxes(thresh)
+                bboxes = update_bboxes(bboxes, del_entries)
 
             # If threshold slider is moved, update bounding rects.
             elif (clean_img is not None) and (prev_thresh != thresh_val):
                 reset = False
                 bboxes = get_init_bboxes(thresh)
+                bboxes = update_bboxes(bboxes, del_entries)
                 # print('Check : ', del_entries)
             elif (clean_img is not None) and prev_min_area != min_area_ratio:
                 bboxes = get_init_bboxes(thresh)
+                bboxes = update_bboxes(bboxes, del_entries)
 
             else:
                 # Update the thresh image if annotation performed once.
