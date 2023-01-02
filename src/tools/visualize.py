@@ -32,33 +32,35 @@ def parser_opt():
     return args
 
 
-def draw_annotations(img, annotation, thickness=2):
+def read_annotations(img, annotation):
     height, width = img.shape[:2]
-    # print('Dimension: ', height, 'x', width)
+    bboxes = []
     with open(annotation, 'r') as f:
         lines = f.readlines()
-        total_boxes = len(lines)
-        # print('\nTotal Bounding Boxes : ', total_boxes)
         for line in lines:
             name = line.replace('\n', '')
             class_id, xc, yc, w, h = name.split(' ')
             class_id = int(class_id)
             xc, yc = float(xc), float(yc)
             h, w = float(h), float(w)
-            # print(f"Class ID: {class_id}, Xc: {xc}, Yc: {yc}, Height: {h}, Width: {w}")
             box_h = int(height*h)
             box_w = int(width*w)
-            # print(xc - w/2)
             x_center = int(xc*width)
             y_center = int(yc*height)
-
             x1 = x_center - int(box_w/2)
             y1 = y_center - int(box_h/2)
             x2 = x1 + box_w 
             y2 = y1 + box_h
+            p1 = (x1, y1)
+            p2 = (x2, y2)
+            bboxes.append((p1, p2))
+    return bboxes
 
-            cv2.rectangle(img, (x1, y1), (x2, y2), (0,255,0), thickness)
-    
+
+def draw_annotations(img, bboxes, thickness=2):
+    p1 = bboxes[0]
+    p2 = bboxes[1]
+    cv2.rectangle(img, p1, p2, (0,255,0), thickness)
     return img
 
 
@@ -120,7 +122,8 @@ def main():
         ann_path = os.path.join(ann_path_prefix, img_files[n].split(".")[0] + '.txt')
 
         img = cv2.imread(img_path)
-        annotated_img = draw_annotations(img, ann_path, thickness)
+        bounding_boxes = read_annotations(img, ann_path)
+        annotated_img = draw_annotations(img, bounding_boxes, thickness)
         cv2.imshow(f"{img_files[n]}", annotated_img)
         key = cv2.waitKey(0)
 
@@ -147,7 +150,8 @@ def main():
             print('Please provide text file with annotations in YOLO format.')
         
         img = cv2.imread(args.img)
-        annotated_img = draw_annotations(img, args.ann, thickness)
+        bounding_boxes = read_annotations(img, args.ann)
+        annotated_img = draw_annotations(img, bounding_boxes, thickness)
 
         cv2.imshow(f"{args.ann}", annotated_img)
         cv2.waitKey(0)
