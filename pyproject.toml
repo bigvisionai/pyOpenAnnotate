@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyOpenAnnotate"
-version = "0.4.0"
+version = "0.4.1"
 description = "Single class automated annotation tool using OpenCV"
 readme = "README.md"
 authors = [{ name = "Kukil Kashyap Borgohain, LearnOpenCV", email = "kukilp213@gmail.com" }]

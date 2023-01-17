@@ -101,7 +101,7 @@ def get_init_bboxes(img):
         if (min_area_ratio * max_area < cnt_area):
             x = x - PADDING
             y = y - PADDING
-            x = 0 if x <0 else x
+            x = 0 if x < 0 else x
             y = 0 if y < 0 else y
             x = img.shape[1] if x > img.shape[1] else x
             y = img.shape[0] if y > img.shape[0] else y
