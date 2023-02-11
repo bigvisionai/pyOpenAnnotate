@@ -26,6 +26,8 @@ PADDING = 10
 Toggle  = False
 min_area_ratio = 0.000
 manual_assert_boxes = []
+swap_channel = False
+channel_count = 0
 #-------------------------------------------------------------------------------#
 
 
@@ -192,10 +194,23 @@ def update_bboxes(bboxes, del_entries, manual):
     return bboxes
 
 
+# Return a single channel image.
+def channel_select(img, ch_count):
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    blue, green, red = cv2.split(img)
+    img_hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    hue, sat, lightness = cv2.split(img_hsv)
+    channel_list = [gray, blue, green, red, hue, sat, lightness]
+    print(f"Channel count : {channel_count}")
+
+    return channel_list[ch_count]
+
+
+
 # Load images.
 def main():
-    global coord, tlc, draw_box, clean_img, org_img, min_area_ratio
-    global remove_box, bboxes, del_entries, reset, Toggle, manual_assert_boxes
+    global coord, tlc, draw_box, clean_img, org_img, min_area_ratio, channel_count
+    global remove_box, bboxes, del_entries, reset, Toggle, manual_assert_boxes, swap_channel
     
     args = parser_opt()
 
@@ -297,7 +312,8 @@ def main():
         prev_min_area = 0.00
         
         while True:
-            img_gray = cv2.cvtColor(resized_image, cv2.COLOR_BGR2GRAY)
+            # img_gray = cv2.cvtColor(resized_image, cv2.COLOR_BGR2GRAY)
+            img_gray = channel_select(resized_image, channel_count)
             img_gray_padded = cv2.copyMakeBorder(img_gray, PADDING, PADDING, PADDING, PADDING, 
             	cv2.BORDER_CONSTANT, None, value=255)
             im_annotate = resized_image.copy()
@@ -329,7 +345,10 @@ def main():
             elif (clean_img is not None) and prev_min_area != min_area_ratio:
                 bboxes = get_init_bboxes(thresh)
                 bboxes = update_bboxes(bboxes, del_entries, manual_assert_boxes)
-
+            elif( clean_img is not None) and swap_channel:
+                bboxes = get_init_bboxes(thresh)
+                bboxes = update_bboxes(bboxes, del_entries, manual_assert_boxes)
+                swap_channel = False
             else:
                 # Update the thresh image if annotation performed once.
                 im_annotate = clean_img
@@ -358,7 +377,8 @@ def main():
                 im_annotate = org_img
       
             if args.toggle or Toggle:
-                cv2.imshow('Mask', thresh)
+                # Disply mask, resized to half the annotation window.
+                cv2.imshow('Mask', cv2.resize(thresh, None, fx=0.5, fy=0.5))
             cv2.imshow('Annotate', im_annotate)
             # print(f"Org : {im_annotate.shape}, Thresh: {thresh.shape}")
 
@@ -395,6 +415,12 @@ def main():
                 bboxes = []
                 del_entries = []
                 manual_assert_boxes = []
+
+            if key == ord('s'):
+                channel_count += 1
+                if channel_count == 7:
+                    channel_count = 0
+                swap_channel = True
             
             if key == ord('t'):
                 Toggle = not Toggle
