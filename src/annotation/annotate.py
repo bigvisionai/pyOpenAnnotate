@@ -201,7 +201,15 @@ def channel_select(img, ch_count):
     img_hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     hue, sat, lightness = cv2.split(img_hsv)
     channel_list = [gray, blue, green, red, hue, sat, lightness]
-    print(f"Channel count : {channel_count}")
+    channel_name_list = ["Gray",
+                         "Blue",
+                         "Green",
+                         "Red",
+                         "Hue",
+                         "Saturation",
+                         "Lightness"]
+    # print(f"Channel count : {channel_count}")
+
 
     return channel_list[ch_count]
 
