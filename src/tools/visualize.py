@@ -58,9 +58,10 @@ def read_annotations(img, annotation):
 
 
 def draw_annotations(img, bboxes, thickness=2):
-    p1 = bboxes[0]
-    p2 = bboxes[1]
-    cv2.rectangle(img, p1, p2, (0,255,0), thickness)
+    for bbox in bboxes:
+        p1 = bbox[0]
+        p2 = bbox[1]
+        cv2.rectangle(img, p1, p2, (0,255,0), thickness)
     return img
 
 
