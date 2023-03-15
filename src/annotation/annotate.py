@@ -28,6 +28,8 @@ min_area_ratio = 0.000
 manual_assert_boxes = []
 swap_channel = False
 channel_count = 0
+blob_conf_key = False
+blob_conf = False
 #-------------------------------------------------------------------------------#
 
 
@@ -56,6 +58,12 @@ def parser_opt():
         type=int,
         default=3,
         help="Number of frames to skip."
+    )
+    parser.add_argument(
+        '-blob', '--blob',
+        dest='blob_conf',
+        action='store_true',
+        help='Turn on advanced shape and size filter control '
     )
     if len(sys.argv) == 1:
         parser.print_help()
@@ -210,15 +218,17 @@ def channel_select(img, ch_count):
                          "Lightness"]
     # print(f"Channel count : {channel_count}")
 
-
     return channel_list[ch_count]
 
+
+def filter_shapes(cnt, type=None):
+    pass
 
 
 # Load images.
 def main():
     global coord, tlc, draw_box, clean_img, org_img, min_area_ratio, channel_count
-    global remove_box, bboxes, del_entries, reset, Toggle, manual_assert_boxes, swap_channel
+    global remove_box, bboxes, del_entries, reset, Toggle, manual_assert_boxes, swap_channel, blob_conf_key, blob_conf
     
     args = parser_opt()
 
@@ -296,6 +306,7 @@ def main():
     cv2.namedWindow('Annotate')
     cv2.createTrackbar('threshold', 'Annotate', 127, 255, utils.ignore)
     cv2.createTrackbar('minArea', 'Annotate', 5, 500, utils.ignore)
+    
     num = 0
     while True:
         if num == len(updated_images_paths):
@@ -388,6 +399,12 @@ def main():
                 # Disply mask, resized to half the annotation window.
                 cv2.imshow('Mask', cv2.resize(thresh, None, fx=0.5, fy=0.5))
             cv2.imshow('Annotate', im_annotate)
+            if blob_conf_key or blob_conf:
+                cv2.namedWindow('Filters')
+                cv2.createTrackbar('circularity', 'Filters', 50, 100, utils.ignore)
+                cv2.createTrackbar('inertia', 'Filters', 50, 100, utils.ignore)
+                cv2.createTrackbar('convexity', 'Filters', 50, 100, utils.ignore)
+                cv2.imshow('Filters', cv2.resize(thresh, None, fx=0.5, fy=0.5))
             # print(f"Org : {im_annotate.shape}, Thresh: {thresh.shape}")
 
             key = cv2.waitKey(1)
@@ -435,6 +452,15 @@ def main():
                 if Toggle == False:
                     try:
                         cv2.destroyWindow('Mask')
+                    except:
+                        pass
+
+            if key == ord('f'):
+                print('Filters window initiated.')
+                blob_conf_key = not blob_conf_key
+                if blob_conf_key == False:
+                    try:
+                        cv2.destroyWindow('Filters')
                     except:
                         pass
                 
