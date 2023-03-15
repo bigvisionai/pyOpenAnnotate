@@ -15,7 +15,7 @@ Automate your image annotation pipeline using <b>pyOpenAnnotate</b>. It is built
 
 ## How To Use pyOpenAnnotate?
 
-### Installation
+### 0. Installation
 ```
 pip install pyOpenAnnotate
 ```
