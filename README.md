@@ -1,6 +1,6 @@
 # Automated Annotation Tool
 
-Automate your image annotation pipeline using <b>pyOpenAnnotate</b>. It is built harnessing the power of OpenCV. Perfect for annotating single class datasets. Check out accompanying blog post to understand how <b>pyOpenAnnotate</b> has been designed. 
+Automate your image annotation pipeline using <b>pyOpenAnnotate</b>. It is built harnessing the power of OpenCV. Perfect for annotating single class datasets. Check out accompanying blog post to understand how <b>pyOpenAnnotate</b> has been designed. Coming up ML backend for auto annotation.
 
 [Automated Image Annotation Tool Using OpenCV](https://learnopencv.com/automated-image-annotation-tool-using-opencv-python/).
 
